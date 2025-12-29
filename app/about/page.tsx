@@ -1,0 +1,21 @@
+import { RightNavbar } from '@/components/navigation/right-navbar'
+import { MobileNav } from '@/components/navigation/mobile-nav'
+import { AboutContent } from '@/components/about/about-content'
+
+export const metadata = {
+  title: 'About | Mehtab Aftabur Rosul',
+  description: 'Learn about Mehtab Aftabur Rosul - AI/ML Engineer, LLM Specialist, and Quantum Computing Enthusiast',
+}
+
+export default function AboutPage() {
+  return (
+    <>
+      <RightNavbar />
+      <MobileNav />
+      <main className="relative min-h-screen pt-20">
+        <AboutContent />
+      </main>
+    </>
+  )
+}
+
