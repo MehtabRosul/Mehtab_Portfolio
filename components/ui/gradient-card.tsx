@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react'
 import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
+import { cn, isQuantumContent, getGoldPaletteFor } from '@/lib/utils'
 
 interface GradientCardProps {
   children: ReactNode
@@ -19,6 +19,8 @@ export function GradientCard({
   hover = true,
   delay = 0,
 }: GradientCardProps) {
+  const isQuantum = isQuantumContent(children)
+  const gold = isQuantum ? getGoldPaletteFor((typeof children === 'string' ? children : undefined) as any) : null
   return (
     <motion.div
       className={cn(
@@ -34,9 +36,9 @@ export function GradientCard({
       whileHover={hover ? { scale: 1.05, y: -5 } : {}}
       style={
         hover
-          ? {
-              boxShadow: `0 0 20px ${glowColor}20`,
-            }
+          ? isQuantum
+            ? { boxShadow: `0 0 30px ${gold!.glow}33`, border: `1px solid ${gold!.border}` }
+            : { boxShadow: `0 0 20px ${glowColor}20` }
           : {}
       }
     >

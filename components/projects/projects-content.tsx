@@ -9,6 +9,7 @@ import { ScrollReveal } from '@/components/animations/scroll-reveal'
 import { useStaggerChildren } from '@/lib/scroll-animations'
 import { GradientText } from '@/components/ui/gradient-text'
 import { Avatar } from '@/components/ui/avatar'
+import { isQuantumContent, getGoldPaletteFor } from '@/lib/utils'
 
 const categories = [
   'All',
@@ -186,11 +187,15 @@ export function ProjectsContent() {
             {/* Featured Projects - Large Cards */}
             {featuredProjects.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {featuredProjects.map((project) => (
+                {featuredProjects.map((project) => {
+                  const isQuantum = isQuantumContent(project.category ?? project.title)
+                  const gold = isQuantum ? getGoldPaletteFor(project.title) : null
+                  return (
                   <HoverCard
                     key={project.id}
-                    className="project-card glass-strong rounded-2xl overflow-hidden border border-cyber-blue/30 group"
-                    glowColor="#8b5cf6"
+                    className="project-card glass-strong rounded-2xl overflow-hidden group"
+                    glowColor={isQuantum ? gold!.glow : '#8b5cf6'}
+                    style={isQuantum ? { border: `1px solid ${gold!.border}`, boxShadow: `0 0 30px ${gold!.glow}33`, background: `${gold!.bg}` } : { border: '1px solid rgba(255,255,255,0.06)' }}
                   >
                     <div className="grid md:grid-cols-1 gap-0">
                       {/* Image Section */}
@@ -255,17 +260,22 @@ export function ProjectsContent() {
                       </div>
                     </div>
                   </HoverCard>
-                ))}
+                  )
+                })}
               </div>
             )}
 
             {/* Regular Projects - Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {regularProjects.map((project) => (
+              {regularProjects.map((project) => {
+                const isQuantum = isQuantumContent(project.category ?? project.title)
+                const gold = isQuantum ? getGoldPaletteFor(project.title) : null
+                return (
                 <HoverCard
                   key={project.id}
-                  className="project-card glass-strong rounded-xl overflow-hidden border border-cyber-blue/30 group"
-                  glowColor="#00f0ff"
+                  className="project-card glass-strong rounded-xl overflow-hidden group"
+                  glowColor={isQuantum ? gold!.glow : '#00f0ff'}
+                  style={isQuantum ? { border: `1px solid ${gold!.border}`, boxShadow: `0 0 24px ${gold!.glow}22`, background: `${gold!.bg}` } : { border: '1px solid rgba(255,255,255,0.06)' }}
                 >
                   {/* Project Image */}
                   <div className="h-48 bg-gradient-to-br from-cyber-blue/20 to-cyber-purple/20 relative overflow-hidden">
@@ -325,7 +335,8 @@ export function ProjectsContent() {
                     </div>
                   </div>
                 </HoverCard>
-              ))}
+                )
+              })}
             </div>
           </div>
         </motion.div>

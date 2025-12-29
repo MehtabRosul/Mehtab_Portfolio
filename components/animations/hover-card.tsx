@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useRef, useEffect } from 'react'
+import { ReactNode, useRef, useEffect, CSSProperties } from 'react'
 import { apply3DTilt, applyGlowPulse } from '@/lib/hover-animations'
 import { cn } from '@/lib/utils'
 
@@ -8,9 +8,10 @@ interface HoverCardProps {
   children: ReactNode
   className?: string
   glowColor?: string
+  style?: CSSProperties
 }
 
-export function HoverCard({ children, className, glowColor = '#00f0ff' }: HoverCardProps) {
+export function HoverCard({ children, className, glowColor = '#00f0ff', style }: HoverCardProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export function HoverCard({ children, className, glowColor = '#00f0ff' }: HoverC
     <div
       ref={ref}
       className={cn('transform-gpu', className)}
-      style={{ transformStyle: 'preserve-3d' }}
+      style={{ transformStyle: 'preserve-3d', ...(style || {}) }}
     >
       {children}
     </div>

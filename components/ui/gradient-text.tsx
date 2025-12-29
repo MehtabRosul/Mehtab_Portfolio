@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { ReactNode } from 'react'
+import { GoldenText } from './golden-text'
 
 interface GradientTextProps {
   children: ReactNode
@@ -26,6 +27,27 @@ export function GradientText({
   direction = 'left',
   ease = 'linear'
 }: GradientTextProps) {
+  // Helper to extract plain text from ReactNode for simple detection
+  function extractText(node: ReactNode): string {
+    if (node == null) return ''
+    if (typeof node === 'string' || typeof node === 'number') return String(node)
+    if (Array.isArray(node)) return node.map(n => extractText(n)).join(' ')
+    // If it's a React element, try to read its props.children
+    // @ts-ignore - access children of React element
+    if (typeof node === 'object' && 'props' in (node as any)) {
+      // @ts-ignore
+      return extractText((node as any).props.children)
+    }
+    return ''
+  }
+
+  const combinedText = extractText(children).toLowerCase()
+  // If the rendered text contains 'quantum', render golden text instead
+  if (combinedText.includes('quantum')) {
+    return (
+      <GoldenText className={className}>{children}</GoldenText>
+    )
+  }
   // Use custom colors array if provided, otherwise use from/to
   const colors = gradientColors || [gradientFrom, gradientTo, gradientFrom]
   
