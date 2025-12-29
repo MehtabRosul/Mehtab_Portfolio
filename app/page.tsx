@@ -4,6 +4,7 @@ import { ExpertiseSection } from '@/components/home/expertise-section'
 import { FeaturedProjects } from '@/components/home/featured-projects'
 import { SkillsMatrix } from '@/components/home/skills-matrix'
 import { ResearchPapersSection } from '@/components/home/research-papers-section'
+import { ArticlesSection } from '@/components/home/articles-section'
 import { RightNavbar } from '@/components/navigation/right-navbar'
 import { MobileNav } from '@/components/navigation/mobile-nav'
 
@@ -19,6 +20,7 @@ export default function Home() {
         <FeaturedProjects />
         <SkillsMatrix />
         <ResearchPapersSection />
+        <ArticlesSection />
       </main>
     </>
   )

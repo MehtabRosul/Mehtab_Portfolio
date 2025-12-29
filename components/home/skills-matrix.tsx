@@ -92,7 +92,7 @@ const skillCategories: SkillCategory[] = [
     id: 'quantum',
     title: 'Quantum',
     proficiency: 75,
-    colorScheme: ['#4f46e5', '#6366f1', '#818cf8'],
+    colorScheme: ['#FFD700', '#FFC300', '#FFB700'],
     skills: ['Qiskit', 'Quantum Algorithms', 'Simulation'],
     description: 'Exploring quantum computation as a future computational paradigm',
     terminalCommand: 'qiskit execute --circuit quantum_circuit --shots 1024',

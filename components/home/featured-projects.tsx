@@ -134,7 +134,7 @@ const featuredProjects: Project[] = [
     github: '#',
     featured: false,
     avatar: '/avatars/IMG_9792.PNG',
-    colorScheme: ['#ec4899', '#f472b6', '#f9a8d4'],
+    colorScheme: ['#FFD700', '#FFC300', '#FFB700'],
     metrics: {
       accuracy: 99,
       users: 3000,

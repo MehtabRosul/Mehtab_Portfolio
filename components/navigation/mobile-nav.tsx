@@ -12,6 +12,7 @@ const navItems = [
   { id: 'about', label: 'About', href: '/about' },
   { id: 'projects', label: 'Projects', href: '/projects' },
   { id: 'research', label: 'Research', href: '/research-papers' },
+  { id: 'articles', label: 'Articles', href: '/articles' },
   { id: 'resources', label: 'Resources', href: '/resources' },
   { id: 'gallery', label: 'Gallery', href: '/gallery' },
   { id: 'simulations', label: 'Simulations', href: '/simulations' },
