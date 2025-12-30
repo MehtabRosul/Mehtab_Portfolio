@@ -3,7 +3,7 @@ import { MobileNav } from '@/components/navigation/mobile-nav'
 import { SimulationsContent } from '@/components/simulations/simulations-content'
 
 export const metadata = {
-  title: 'Simulations | Mehtab Aftabur Rosul',
+  title: 'Mehtab Rosul',
   description: 'Interactive simulations and computational models',
 }
 

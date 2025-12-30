@@ -3,7 +3,7 @@ import { MobileNav } from '@/components/navigation/mobile-nav'
 import { AboutContent } from '@/components/about/about-content'
 
 export const metadata = {
-  title: 'About | Mehtab Aftabur Rosul',
+  title: 'Mehtab Rosul',
   description: 'Learn about Mehtab Aftabur Rosul - AI/ML Engineer, LLM Specialist, and Quantum Computing Enthusiast',
 }
 

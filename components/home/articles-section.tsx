@@ -88,7 +88,7 @@ export function ArticlesSection() {
         {/* Centered Button Below Articles */}
         <div className="text-center mt-20">
           <Button asChild variant="neon" size="lg" className="group">
-            <Link href="/articles">
+            <Link href="/resources">
               Explore All Articles
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>

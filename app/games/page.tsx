@@ -3,7 +3,7 @@ import { MobileNav } from '@/components/navigation/mobile-nav'
 import { GamesContent } from '@/components/games/games-content'
 
 export const metadata = {
-  title: '2D Games | Mehtab Aftabur Rosul',
+  title: 'Mehtab Rosul',
   description: 'Playable 2D games built with Python',
 }
 

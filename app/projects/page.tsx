@@ -3,7 +3,7 @@ import { MobileNav } from '@/components/navigation/mobile-nav'
 import { ProjectsContent } from '@/components/projects/projects-content'
 
 export const metadata = {
-  title: 'Projects | Mehtab Aftabur Rosul',
+  title: 'Mehtab Rosul',
   description: 'Explore my portfolio of AI/ML projects, web applications, games, and more',
 }
 

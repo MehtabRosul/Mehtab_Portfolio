@@ -112,7 +112,7 @@ export function ResearchPapersSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Link href="/research-papers">
+          <Link href="/resources">
             <motion.button
               className="group relative px-8 py-4 rounded-lg font-semibold text-base md:text-lg overflow-hidden"
               style={{

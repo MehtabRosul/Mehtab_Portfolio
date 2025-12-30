@@ -3,7 +3,7 @@ import { MobileNav } from '@/components/navigation/mobile-nav'
 import { ContactContent } from '@/components/contact/contact-content'
 
 export const metadata = {
-  title: 'Contact | Mehtab Aftabur Rosul',
+  title: 'Mehtab Rosul',
   description: 'Get in touch with Mehtab Aftabur Rosul',
 }
 

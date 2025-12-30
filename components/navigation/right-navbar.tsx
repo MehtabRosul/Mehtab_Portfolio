@@ -22,9 +22,8 @@ const navItems = [
   { id: 'home', label: 'Home', icon: Zap, href: '/' },
   { id: 'about', label: 'About Me', icon: UserCircle2, href: '/about' },
   { id: 'projects', label: 'Projects', icon: Briefcase, href: '/projects' },
-  { id: 'research', label: 'Research', icon: FileText, href: '/research-papers' },
-  { id: 'articles', label: 'Articles', icon: Newspaper, href: '/articles' },
-  { id: 'resources', label: 'Certificates', icon: BookOpen, href: '/resources' },
+  // Consolidate research, articles, certificates into a single Resources item
+  { id: 'resources', label: 'Resources', icon: BookOpen, href: '/resources' },
   { id: 'gallery', label: 'Gallery', icon: Image, href: '/gallery' },
   { id: 'simulations', label: 'Simulations', icon: Terminal, href: '/simulations' },
   { id: 'games', label: 'Game', icon: Gamepad2, href: '/games' },

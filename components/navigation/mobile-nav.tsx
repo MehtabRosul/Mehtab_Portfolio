@@ -11,8 +11,7 @@ const navItems = [
   { id: 'home', label: 'Home', href: '/' },
   { id: 'about', label: 'About', href: '/about' },
   { id: 'projects', label: 'Projects', href: '/projects' },
-  { id: 'research', label: 'Research', href: '/research-papers' },
-  { id: 'articles', label: 'Articles', href: '/articles' },
+  // Consolidate research/articles/certificates under Resources
   { id: 'resources', label: 'Resources', href: '/resources' },
   { id: 'gallery', label: 'Gallery', href: '/gallery' },
   { id: 'simulations', label: 'Simulations', href: '/simulations' },

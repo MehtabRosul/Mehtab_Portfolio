@@ -274,6 +274,36 @@ export function ResourcesContent() {
         </div>
       </section>
 
+      {/* Certificates Section */}
+      <section className="mt-16">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-4xl font-heading font-bold mb-8 flex items-center gap-3"
+        >
+          <BookOpen className="w-10 h-10 text-cyber-green" />
+          <span>Certificates & Achievements</span>
+        </motion.h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Placeholder certificate cards — replace with real data as needed */}
+          {[
+            { id: 1, title: 'Deep Learning Specialization', issuer: 'Coursera', year: 2023 },
+            { id: 2, title: 'Advanced NLP with Transformers', issuer: 'Udemy', year: 2024 },
+            { id: 3, title: 'Quantum Computing Foundations', issuer: 'edX', year: 2024 },
+          ].map((cert) => (
+            <GradientCard key={cert.id} className="relative overflow-hidden group" glowColor="#00ff88">
+              <div className="relative z-10 p-6">
+                <h3 className="text-xl font-bold mb-2">{cert.title}</h3>
+                <p className="text-sm text-foreground/60 mb-4">{cert.issuer} • {cert.year}</p>
+                <Button variant="ghost" size="sm">View</Button>
+              </div>
+            </GradientCard>
+          ))}
+        </div>
+      </section>
+
       {/* ResearchGate Link */}
       <motion.div
         initial={{ opacity: 0 }}

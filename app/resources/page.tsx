@@ -3,7 +3,7 @@ import { MobileNav } from '@/components/navigation/mobile-nav'
 import { ResourcesContent } from '@/components/resources/resources-content'
 
 export const metadata = {
-  title: 'Resources | Mehtab Aftabur Rosul',
+  title: 'Mehtab Rosul',
   description: 'Research papers, articles, and case studies by Mehtab Aftabur Rosul',
 }
 
