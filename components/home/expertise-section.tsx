@@ -1909,7 +1909,7 @@ export function ExpertiseSection() {
               },
             }}
           >
-            <span className="text-white">Expertise & </span>
+            <span className="text-white">Engineering </span>
             <GradientText
               gradientColors={['#007CF0', '#00DFD8', '#7F00FF', '#007CF0']}
               duration={15}
@@ -1917,7 +1917,7 @@ export function ExpertiseSection() {
               ease="linear"
               className="font-black"
             >
-              Technical Skills
+              Expertise
             </GradientText>
           </motion.h2>
 
