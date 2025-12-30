@@ -1,21 +1,13 @@
-import { RightNavbar } from '@/components/navigation/right-navbar'
-import { MobileNav } from '@/components/navigation/mobile-nav'
-import { GalleryContent } from '@/components/gallery/gallery-content'
 
-export const metadata = {
-  title: 'Gallery | Mehtab Aftabur Rosul',
-  description: 'Certificates, awards, and work samples from Mehtab Aftabur Rosul',
-}
+import { GalleryContent } from '@/components/gallery/gallery-content';
 
 export default function GalleryPage() {
   return (
-    <>
-      <RightNavbar />
-      <MobileNav />
-      <main className="relative min-h-screen pt-20">
+    <div className="relative min-h-screen bg-black text-white">
+      <div className="absolute inset-0 bg-grid-white/[0.05] [mask-image:linear-gradient(to_bottom,transparent,black,transparent)]"></div>
+      <div className="relative z-10">
         <GalleryContent />
-      </main>
-    </>
-  )
+      </div>
+    </div>
+  );
 }
-

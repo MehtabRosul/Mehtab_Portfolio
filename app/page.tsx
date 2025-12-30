@@ -5,9 +5,9 @@ import { FeaturedProjects } from '@/components/home/featured-projects'
 import { SkillsMatrix } from '@/components/home/skills-matrix'
 import { ResearchPapersSection } from '@/components/home/research-papers-section'
 import { ArticlesSection } from '@/components/home/articles-section'
-import { GalleryBanner } from '@/components/home/gallery-banner'
 import { RightNavbar } from '@/components/navigation/right-navbar'
 import { MobileNav } from '@/components/navigation/mobile-nav'
+import { GalleryBanner } from '@/components/home/gallery-banner'
 
 export default function Home() {
   return (
