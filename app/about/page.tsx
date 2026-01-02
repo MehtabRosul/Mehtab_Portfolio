@@ -1,7 +1,7 @@
 import { RightNavbar } from '@/components/navigation/right-navbar'
 import { MobileNav } from '@/components/navigation/mobile-nav'
 import { AboutContent } from '@/components/about/about-content'
-import { AboutParticles } from '@/components/particles/about-particles'
+
 
 export const metadata = {
   title: 'Mehtab Rosul',
@@ -15,7 +15,7 @@ export default function AboutPage() {
       <MobileNav />
       <main className="relative min-h-screen pt-20">
         <div className="absolute inset-0 -z-10">
-          <AboutParticles />
+          {/* Particles removed */}
         </div>
         {/* Content Layer */}
         <div className="relative z-10">

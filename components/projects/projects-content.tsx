@@ -1,356 +1,337 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ExternalLink, Github } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { HoverCard } from '@/components/animations/hover-card'
+import { Star, Calendar, Sparkles, Layers, Terminal, Cpu, Globe, Smartphone, Wrench, Hash, Atom, Gamepad2, ExternalLink } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { MagicCard } from '@/components/animations/magic-card'
 import { ScrollReveal } from '@/components/animations/scroll-reveal'
-import { useStaggerChildren } from '@/lib/scroll-animations'
 import { GradientText } from '@/components/ui/gradient-text'
-import { Avatar } from '@/components/ui/avatar'
 import { isQuantumContent, getGoldPaletteFor } from '@/lib/utils'
+import { projectsData, ProjectCategory } from '@/lib/projects-data'
 
-const categories = [
-  'All',
-  '2D Python Games',
-  'ML Prediction Systems',
-  'Detection Systems',
-  'Mobile Apps',
-  'Web Development',
-  'BCI with AI-ML',
-  'Cybersecurity',
+const categories: ProjectCategory[] = [
+  'AI/ML',
+  'Quantum Computing',
+  'Game Dev',
+  'Web Dev',
+  'Mobile App',
+  'Tools & Utility'
 ]
 
-const projects = [
-  {
-    id: 1,
-    title: 'Advanced ML Prediction System',
-    category: 'ML Prediction Systems',
-    description: 'A sophisticated machine learning system for predictive analytics with high accuracy',
-    tech: ['Python', 'TensorFlow', 'React', 'Node.js'],
-    image: '/images/project1.jpg',
-    link: '#',
-    github: '#',
-    featured: true,
-    avatar: '/avatars/IMG_9787.PNG',
-  },
-  {
-    id: 2,
-    title: 'Object Detection System',
-    category: 'Detection Systems',
-    description: 'Real-time object detection using deep learning and computer vision',
-    tech: ['Python', 'OpenCV', 'YOLO', 'PyTorch'],
-    image: '/images/project2.jpg',
-    link: '#',
-    github: '#',
-    featured: false,
-    avatar: '/avatars/IMG_9788.PNG',
-  },
-  {
-    id: 3,
-    title: 'E-Commerce Platform',
-    category: 'Web Development',
-    description: 'Full-stack e-commerce solution with modern architecture and payment integration',
-    tech: ['Next.js', 'Node.js', 'PostgreSQL', 'Stripe'],
-    image: '/images/project3.jpg',
-    link: '#',
-    github: '#',
-    featured: false,
-    avatar: '/avatars/IMG_9789.PNG',
-  },
-  {
-    id: 4,
-    title: 'BCI Neural Interface',
-    category: 'BCI with AI-ML',
-    description: 'Brain-Computer Interface system using AI and ML for neural signal processing',
-    tech: ['Python', 'PyTorch', 'EEG', 'TensorFlow'],
-    image: '/images/project4.jpg',
-    link: '#',
-    github: '#',
-    featured: true,
-    avatar: '/avatars/IMG_9792.PNG',
-  },
-  {
-    id: 5,
-    title: '2D Python Game Collection',
-    category: '2D Python Games',
-    description: 'Collection of engaging 2D games built with Python and Pygame',
-    tech: ['Python', 'Pygame', 'NumPy'],
-    image: '/images/project5.jpg',
-    link: '#',
-    github: '#',
-    featured: false,
-    avatar: '/avatars/IMG_9793.PNG',
-  },
-  {
-    id: 6,
-    title: 'Mobile Health App',
-    category: 'Mobile Apps',
-    description: 'Healthcare mobile application with AI-powered diagnostics',
-    tech: ['React Native', 'Python', 'TensorFlow Lite'],
-    image: '/images/project6.jpg',
-    link: '#',
-    github: '#',
-    featured: false,
-    avatar: '/avatars/IMG_9795.PNG',
-  },
-  {
-    id: 7,
-    title: 'Cybersecurity Tool Suite',
-    category: 'Cybersecurity',
-    description: 'Comprehensive cybersecurity tools for threat detection and analysis',
-    tech: ['Python', 'C++', 'React', 'Docker'],
-    image: '/images/project7.jpg',
-    link: '#',
-    github: '#',
-    featured: false,
-    avatar: '/avatars/IMG_9796.PNG',
-  },
-  {
-    id: 8,
-    title: 'AdTech Platform',
-    category: 'Web Development',
-    description: 'Advanced advertising technology platform with real-time bidding',
-    tech: ['Next.js', 'Node.js', 'Redis', 'Kafka'],
-    image: '/images/project8.jpg',
-    link: '#',
-    github: '#',
-    featured: false,
-    avatar: '/avatars/IMG_9781.PNG',
-  },
-]
+const getCategoryConfig = (cat: ProjectCategory) => {
+  switch (cat) {
+    case 'AI/ML': return { icon: Cpu, colors: ['#00f0ff', '#4f46e5', '#8b5cf6'] } // Cyan to Purple
+    case 'Quantum Computing': return { icon: Atom, colors: ['#ffd700', '#f59e0b', '#fbbf24'] } // Gold
+    case 'Game Dev': return { icon: Gamepad2, colors: ['#22c55e', '#10b981', '#34d399'] } // Green
+    case 'Web Dev': return { icon: Globe, colors: ['#3b82f6', '#06b6d4', '#2563eb'] } // Blue/Cyan
+    case 'Mobile App': return { icon: Smartphone, colors: ['#f472b6', '#db2777', '#be185d'] } // Pink
+    case 'Tools & Utility': return { icon: Wrench, colors: ['#94a3b8', '#475569', '#64748b'] } // Slate
+    default: return { icon: Hash, colors: ['#ffffff', '#888888', '#444444'] }
+  }
+}
 
-export function ProjectsContent() {
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const containerRef = useRef<HTMLDivElement>(null)
-  const filteredProjects = selectedCategory === 'All' 
-    ? projects 
-    : projects.filter(p => p.category === selectedCategory)
-
-  useStaggerChildren(containerRef, '.project-card', 0.1)
-
-  const featuredProjects = filteredProjects.filter(p => p.featured)
-  const regularProjects = filteredProjects.filter(p => !p.featured)
+function AnimatedCategoryIcon({ category, size = "w-12 h-12" }: { category: ProjectCategory, size?: string }) {
+  const { icon: Icon, colors } = getCategoryConfig(category)
+  const id = `gradient-${category.replace(/[^a-z0-9]/gi, '')}`
 
   return (
-    <div className="container mx-auto px-4 py-20">
-      {/* Header */}
-      <ScrollReveal className="text-center mb-16">
-        <h1 className="text-5xl md:text-6xl lg:text-8xl font-heading font-bold mb-6">
-          <span className="text-white">My</span>{' '}
-          <GradientText 
-            gradientColors={['#00f0ff', '#4f46e5', '#6366f1', '#8b5cf6', '#a855f7']}
-            duration={5.5}
-            direction="right"
-            ease="linear"
+    <div className={`relative ${size} flex items-center justify-center`}>
+      <svg width="0" height="0" className="absolute">
+        <defs>
+          <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="100%">
+            <motion.stop
+              offset="0%"
+              stopColor={colors[0]}
+              animate={{ stopColor: colors }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatType: "mirror" }}
+            />
+            <motion.stop
+              offset="50%"
+              stopColor={colors[1]}
+              animate={{ stopColor: [colors[1], colors[2], colors[0]] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatType: "mirror" }}
+            />
+            <motion.stop
+              offset="100%"
+              stopColor={colors[2]}
+              animate={{ stopColor: [colors[2], colors[0], colors[1]] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatType: "mirror" }}
+            />
+          </linearGradient>
+        </defs>
+      </svg>
+      <Icon className={`${size}`} style={{ stroke: `url(#${id})` }} />
+    </div>
+  )
+}
+
+const getCategoryIcon = (cat: ProjectCategory) => {
+  const { icon: Icon } = getCategoryConfig(cat)
+  return <Icon className="w-4 h-4" />
+}
+
+export function ProjectsContent() {
+  const [activeSection, setActiveSection] = useState<ProjectCategory>('AI/ML')
+
+  // Group projects by category
+  const groupedProjects = useMemo(() => {
+    const groups: Record<string, typeof projectsData> = {}
+
+    categories.forEach(cat => {
+      const projects = projectsData.filter(p => p.category === cat)
+        .sort((a, b) => (a.featured === b.featured) ? 0 : a.featured ? -1 : 1)
+
+      if (projects.length > 0) {
+        groups[cat] = projects
+      }
+    })
+    return groups
+  }, [])
+
+  const [isScrolling, setIsScrolling] = useState(false)
+
+  // Scroll Spy Logic
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isScrolling) return // Don't spy while auto-scrolling
+
+      const scrollPosition = window.scrollY + 200 // Offset for header
+
+      // 1. Back to Top Check (User Request)
+      if (window.scrollY < 300) {
+        setActiveSection('AI/ML')
+        return
+      }
+
+      // 2. Find active section
+      for (const category of categories) {
+        const element = document.getElementById(`section-${category}`)
+        if (element) {
+          const { top, bottom } = element.getBoundingClientRect()
+          const absoluteTop = top + window.pageYOffset
+          const absoluteBottom = bottom + window.pageYOffset
+
+          if (scrollPosition >= absoluteTop && scrollPosition < absoluteBottom) {
+            setActiveSection(category)
+            break
+          }
+        }
+      }
+    }
+
+    let timeoutId: NodeJS.Timeout
+    const throttledScroll = () => {
+      if (timeoutId) return
+      timeoutId = setTimeout(() => {
+        handleScroll()
+        timeoutId = undefined!
+      }, 100)
+    }
+
+    window.addEventListener('scroll', throttledScroll)
+    return () => window.removeEventListener('scroll', throttledScroll)
+  }, [isScrolling, groupedProjects])
+
+  const scrollToSection = (category: ProjectCategory) => {
+    setIsScrolling(true)
+    setActiveSection(category)
+    const element = document.getElementById(`section-${category}`)
+    if (element) {
+      const yOffset = -120 // Offset for sticky header
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+      window.scrollTo({ top: y, behavior: 'smooth' })
+
+      // Reset isScrolling after animation
+      setTimeout(() => setIsScrolling(false), 1000)
+    }
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-20 min-h-screen relative">
+      {/* Header Section */}
+      <ScrollReveal className="text-center mb-16 space-y-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border border-primary/20 text-xs font-mono text-primary mb-4">
+          <Sparkles className="w-3 h-3" />
+          <span>EXPLORE THE ARCHIVES</span>
+        </div>
+
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold tracking-tight">
+          <GradientText
+            gradientColors={['#00f0ff', '#4f46e5', '#8b5cf6', '#d946ef']}
+            duration={8}
+            className="drop-shadow-[0_0_15px_rgba(79,70,229,0.5)]"
           >
-            Projects
+            Innovation
           </GradientText>
+          <span className="block text-3xl md:text-5xl lg:text-6xl mt-2 text-foreground/80 font-light">
+            Through Code
+          </span>
         </h1>
-        <p className="text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto">
-          A collection of innovative projects spanning AI/ML, web development, games, and emerging technologies
+
+        <p className="max-w-2xl mx-auto text-lg text-muted-foreground/80 leading-relaxed">
+          A curated collection of <span className="text-primary font-semibold">{projectsData.length}+</span> projects spanning quantum computing, artificial intelligence, and interactive experiences.
         </p>
       </ScrollReveal>
 
-      {/* Category Filters */}
-      <ScrollReveal delay={0.2} className="mb-12">
-        <div className="flex flex-wrap gap-3 justify-center">
-          {categories.map((category) => (
-            <motion.button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-2 rounded-full transition-all duration-200 font-medium ${
-                selectedCategory === category
-                  ? 'bg-cyber-blue text-black cyber-glow shadow-lg shadow-cyber-blue/50'
-                  : 'glass border border-cyber-blue/30 text-foreground hover:bg-cyber-blue/20 hover:border-cyber-blue/50'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+      {/* Sticky Navigation Rail */}
+      <div className="sticky top-4 z-40 mb-16 flex justify-center w-full">
+        <div className="glass-strong rounded-full p-1.5 border border-white/10 shadow-2xl backdrop-blur-xl flex items-center gap-1 overflow-x-auto max-w-[95vw] no-scrollbar">
+          {categories.filter(cat => groupedProjects[cat]?.length > 0).map((cat) => (
+            <button
+              key={cat}
+              onClick={() => scrollToSection(cat)}
+              className={`relative px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 whitespace-nowrap flex items-center gap-2 group ${activeSection === cat
+                ? 'text-white'
+                : 'text-muted-foreground hover:text-white'
+                }`}
             >
-              {category}
-            </motion.button>
+              {activeSection === cat && (
+                <motion.div
+                  layoutId="activePill"
+                  className="absolute inset-0 bg-primary/20 border border-primary/50 rounded-full shadow-[0_0_15px_rgba(79,70,229,0.4)]"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-2">
+                {getCategoryIcon(cat)}
+                {cat}
+                <span className="opacity-50 text-[10px]">({groupedProjects[cat]?.length})</span>
+              </span>
+            </button>
           ))}
         </div>
-      </ScrollReveal>
+      </div>
 
-      {/* Projects Grid - Asymmetric Layout */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={selectedCategory}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div ref={containerRef} className="space-y-8">
-            {/* Featured Projects - Large Cards */}
-            {featuredProjects.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {featuredProjects.map((project) => {
-                  const isQuantum = isQuantumContent(project.category ?? project.title)
-                  const gold = isQuantum ? getGoldPaletteFor(project.title) : null
-                  return (
-                  <HoverCard
+      {/* Sections */}
+      <div className="space-y-32">
+        {Object.entries(groupedProjects).map(([category, projects]) => (
+          <section key={category} id={`section-${category}`} className="scroll-mt-32">
+            {/* Section Header */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="flex items-center gap-6 mb-12"
+            >
+              <h2 className="text-3xl md:text-5xl font-bold font-heading flex items-center gap-4 text-glow">
+                <AnimatedCategoryIcon category={category as ProjectCategory} size="w-12 h-12" />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white/50">
+                  {category}
+                </span>
+              </h2>
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            </motion.div>
+
+            {/* Projects Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projects.map((project, index) => {
+                const isQuantum = isQuantumContent(project.title) || project.category === 'Quantum Computing'
+                const gold = isQuantum ? getGoldPaletteFor(project.title) : null
+
+                return (
+                  <motion.div
                     key={project.id}
-                    className="project-card glass-strong rounded-2xl overflow-hidden group"
-                    glowColor={isQuantum ? gold!.glow : '#8b5cf6'}
-                    style={isQuantum ? { border: `1px solid ${gold!.border}`, boxShadow: `0 0 30px ${gold!.glow}33`, background: `${gold!.bg}` } : { border: '1px solid rgba(255,255,255,0.06)' }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
                   >
-                    <div className="grid md:grid-cols-1 gap-0">
-                      {/* Image Section */}
-                      <div className="h-64 bg-gradient-to-br from-cyber-blue/20 via-cyber-purple/20 to-cyber-green/20 relative overflow-hidden">
-                        <div className="absolute inset-0 cyber-grid-bg opacity-50" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-3xl font-bold text-cyber-blue/50">
-                            {project.category}
-                          </span>
+                    <MagicCard
+                      className="h-full group hover:-translate-y-1"
+                      category={project.category}
+                      gradientColor={getCategoryConfig(project.category).colors[1]}
+                    >
+                      {/* Status / Featured Badge */}
+                      <div className="flex items-start justify-between mb-6">
+                        <div className="flex gap-2">
+                          {project.featured && (
+                            <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 px-2 py-0.5 text-[10px]">
+                              FEATURED
+                            </Badge>
+                          )}
+                          {project.lastUpdated === 'Private' && (
+                            <Badge variant="outline" className="bg-red-500/10 text-red-400 border-red-500/20 px-2 py-0.5 text-[10px]">
+                              PRIVATE
+                            </Badge>
+                          )}
                         </div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        
-                        {/* Avatar overlay */}
-                        <div className="absolute bottom-4 right-4">
-                          <Avatar
-                            src={project.avatar}
-                            alt="Creator"
-                            size="md"
-                            variant="circle"
-                            glow
-                            animated
-                          />
+                        <div className="text-muted-foreground/30 transform transition-transform group-hover:scale-110 group-hover:rotate-12 duration-500">
+                          {getCategoryIcon(project.category)}
                         </div>
                       </div>
 
-                      {/* Content Section */}
-                      <div className="p-6">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm text-cyber-blue font-semibold px-3 py-1 glass rounded-full">
-                            {project.category}
+                      {/* Content */}
+                      <div className="flex-1 space-y-4">
+                        <h3
+                          className="text-2xl font-bold font-heading transition-all duration-300 line-clamp-1 group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
+                          style={{
+                            // Dynamic glow color based on category
+                            textShadow: `0 0 20px ${getCategoryConfig(project.category).colors[1]}00` // Initial transparent
+                          }}
+                        >
+                          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/90 group-hover:to-white transition-all duration-300"
+                            style={{
+                              filter: `drop-shadow(0 0 8px ${getCategoryConfig(project.category).colors[1]}80)`
+                            }}>
+                            {project.title}
                           </span>
-                          <span className="text-xs text-foreground/40">FEATURED</span>
-                        </div>
-                        <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-                        <p className="text-foreground/60 mb-4 text-sm leading-relaxed">{project.description}</p>
-                        
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {project.tech.map((tech) => (
+                        </h3>
+                        <p className="text-sm text-muted-foreground/80 line-clamp-3 leading-relaxed group-hover:text-muted-foreground transition-colors duration-300">
+                          {project.description}
+                        </p>
+                      </div>
+
+                      {/* Tech Stack */}
+                      <div className="mt-8 mb-6">
+                        <div className="flex flex-wrap gap-2">
+                          {project.tech.slice(0, 4).map((tech) => (
                             <span
                               key={tech}
-                              className="px-2 py-1 text-xs glass rounded-md border border-cyber-blue/20"
+                              className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-md bg-white/5 border border-white/5 text-muted-foreground transition-all duration-300 group-hover:border-white/10 group-hover:bg-white/10 group-hover:text-white"
                             >
                               {tech}
                             </span>
                           ))}
-                        </div>
-
-                        <div className="flex gap-2">
-                          <Button variant="ghost" size="sm" asChild>
-                            <a href={project.link} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-4 h-4 mr-2" />
-                              View
-                            </a>
-                          </Button>
-                          <Button variant="ghost" size="sm" asChild>
-                            <a href={project.github} target="_blank" rel="noopener noreferrer">
-                              <Github className="w-4 h-4 mr-2" />
-                              Code
-                            </a>
-                          </Button>
+                          {project.tech.length > 4 && (
+                            <span className="text-[10px] px-2 py-1 text-muted-foreground">+ {project.tech.length - 4}</span>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  </HoverCard>
-                  )
-                })}
-              </div>
-            )}
 
-            {/* Regular Projects - Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {regularProjects.map((project) => {
-                const isQuantum = isQuantumContent(project.category ?? project.title)
-                const gold = isQuantum ? getGoldPaletteFor(project.title) : null
-                return (
-                <HoverCard
-                  key={project.id}
-                  className="project-card glass-strong rounded-xl overflow-hidden group"
-                  glowColor={isQuantum ? gold!.glow : '#00f0ff'}
-                  style={isQuantum ? { border: `1px solid ${gold!.border}`, boxShadow: `0 0 24px ${gold!.glow}22`, background: `${gold!.bg}` } : { border: '1px solid rgba(255,255,255,0.06)' }}
-                >
-                  {/* Project Image */}
-                  <div className="h-48 bg-gradient-to-br from-cyber-blue/20 to-cyber-purple/20 relative overflow-hidden">
-                    <div className="absolute inset-0 cyber-grid-bg opacity-50" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-2xl font-bold text-cyber-blue/50">
-                        {project.category}
-                      </span>
-                    </div>
-                    <div className="absolute inset-0 bg-cyber-blue/0 group-hover:bg-cyber-blue/10 transition-colors" />
-                    
-                    {/* Avatar in corner */}
-                    <div className="absolute top-3 right-3">
-                      <Avatar
-                        src={project.avatar}
-                        alt="Creator"
-                        size="sm"
-                        variant="circle"
-                        className="border-cyber-purple/30"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-cyber-blue font-semibold">
-                        {project.category}
-                      </span>
-                    </div>
-                    <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-                    <p className="text-foreground/60 mb-4 text-sm">{project.description}</p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tech.map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-2 py-1 text-xs glass rounded-md border border-cyber-blue/20"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button variant="ghost" size="sm" asChild>
-                        <a href={project.link} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          View
-                        </a>
-                      </Button>
-                      <Button variant="ghost" size="sm" asChild>
-                        <a href={project.github} target="_blank" rel="noopener noreferrer">
-                          <Github className="w-4 h-4 mr-2" />
-                          Code
-                        </a>
-                      </Button>
-                    </div>
-                  </div>
-                </HoverCard>
+                      {/* Footer */}
+                      <div className="pt-4 border-t border-dashed border-white/10 flex items-center justify-between text-xs text-muted-foreground/60 group-hover:text-muted-foreground transition-colors duration-300">
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-3 h-3" />
+                            <span>{project.lastUpdated}</span>
+                          </div>
+                          {project.liveUrl && (
+                            <a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all duration-300 border border-white/5 hover:border-white/20"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                              <span>Visit</span>
+                            </a>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1 group-hover:text-amber-400 transition-colors">
+                          <Star className="w-3 h-3" />
+                          <span>{project.stars}</span>
+                        </div>
+                      </div>
+                    </MagicCard>
+                  </motion.div>
                 )
               })}
             </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      {filteredProjects.length === 0 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-20"
-        >
-          <p className="text-xl text-foreground/60">No projects found in this category.</p>
-        </motion.div>
-      )}
+          </section>
+        ))}
+      </div>
     </div>
   )
 }
