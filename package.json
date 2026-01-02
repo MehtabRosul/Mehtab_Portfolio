@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 5050",
+    "dev": "next dev -p 5051",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -17,6 +17,7 @@
     "clsx": "latest",
     "framer-motion": "latest",
     "gsap": "latest",
+    "kill-port": "^2.0.1",
     "lenis": "latest",
     "lucide-react": "latest",
     "next": "^14.2.3",
