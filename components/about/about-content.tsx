@@ -610,17 +610,17 @@ export function AboutContent() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4, duration: 0.6 }}
                   >
-                    <p className="text-base sm:text-lg text-foreground/95 leading-relaxed font-light" style={{ fontFamily: 'Inter, system-ui, sans-serif', lineHeight: '1.7' }}>
-                      I'm <span className="font-bold bg-gradient-to-r from-cyber-blue via-cyber-purple to-cyber-green bg-clip-text text-transparent" style={{ fontWeight: 700 }}>Mehtab Aftabur Rosul</span>,
-                      a passionate <span className="font-semibold text-cyber-blue">AI/ML Engineer</span> and <span className="font-semibold text-cyber-purple">Technical Researcher</span> specializing in
-                      <span className="font-semibold text-cyber-blue"> cybersecurity research</span>,
-                      <span className="font-semibold text-cyber-purple"> quantum computing</span>, and
-                      <span className="font-semibold text-cyber-green"> intelligent systems</span>.
+                    <p className="text-base sm:text-lg text-white leading-relaxed font-light" style={{ fontFamily: 'Inter, system-ui, sans-serif', lineHeight: '1.7' }}>
+                      I'm <span className="font-bold text-white">Mehtab Aftabur Rosul</span>,
+                      a passionate <span className="font-semibold text-white">AI/ML Engineer</span> and <span className="font-semibold text-white">Technical Researcher</span> specializing in
+                      <span className="font-semibold text-white"> cybersecurity research</span>,
+                      <span className="font-semibold text-white"> quantum computing</span>, and
+                      <span className="font-semibold text-white"> intelligent systems</span>.
                     </p>
 
-                    <p className="text-sm sm:text-base text-foreground/80 leading-relaxed font-light" style={{ fontFamily: 'Inter, system-ui, sans-serif', lineHeight: '1.65' }}>
-                      Currently leading cutting-edge AI-driven research at <span className="font-semibold text-white">EncryptArx</span>, developing real-time threat detection frameworks with published work on <span className="font-medium text-cyber-green">ResearchGate</span>.
-                      Experienced in <span className="font-medium text-cyber-blue">full-stack development</span>, <span className="font-medium text-cyber-purple">DevOps</span>, and building scalable systems with
+                    <p className="text-sm sm:text-base text-white leading-relaxed font-light" style={{ fontFamily: 'Inter, system-ui, sans-serif', lineHeight: '1.65' }}>
+                      Currently leading cutting-edge AI-driven research at <span className="font-semibold text-white">EncryptArx</span>, developing real-time threat detection frameworks with published work on <span className="font-medium text-white">ResearchGate</span>.
+                      Experienced in <span className="font-medium text-white">full-stack development</span>, <span className="font-medium text-white">DevOps</span>, and building scalable systems with
                       <span className="font-medium"> TensorFlow</span>, <span className="font-medium">PyTorch</span>, <span className="font-medium">Qiskit</span>, and modern web technologies.
                     </p>
                   </motion.div>
@@ -745,7 +745,7 @@ export function AboutContent() {
             <div className="flex flex-col h-full">
               <div className="flex items-center gap-2 mb-4">
                 <Brain className="w-5 h-5 text-cyber-blue" />
-                <h3 className="text-base sm:text-lg font-bold text-cyber-blue">AI/ML Frameworks</h3>
+                <h3 className="text-base sm:text-lg font-bold text-white">AI/ML Frameworks</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {aiMLFrameworks.map((tool, index) => (
@@ -778,7 +778,7 @@ export function AboutContent() {
             <div className="flex flex-col h-full">
               <div className="flex items-center gap-2 mb-4">
                 <Database className="w-5 h-5 text-cyber-green" />
-                <h3 className="text-base sm:text-lg font-bold text-cyber-green">Backend</h3>
+                <h3 className="text-base sm:text-lg font-bold text-white">Backend</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {backendStack.map((tech, index) => (
@@ -811,7 +811,7 @@ export function AboutContent() {
             <div className="flex flex-col h-full">
               <div className="flex items-center gap-2 mb-4">
                 <Atom className="w-5 h-5 text-[#FFD700]" />
-                <h3 className="text-base sm:text-lg font-bold text-[#FFD700]">Quantum & Specialized</h3>
+                <h3 className="text-base sm:text-lg font-bold text-white">Quantum & Specialized</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {specializedTools.map((tool, index) => (
@@ -845,7 +845,7 @@ export function AboutContent() {
             <div className="flex flex-col h-full">
               <div className="flex items-center gap-2 mb-4">
                 <Network className="w-5 h-5 text-[#61DAFB]" />
-                <h3 className="text-base sm:text-lg font-bold text-[#61DAFB]">Frontend Stack</h3>
+                <h3 className="text-base sm:text-lg font-bold text-white">Frontend Stack</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {frontendTools.map((tool, index) => (

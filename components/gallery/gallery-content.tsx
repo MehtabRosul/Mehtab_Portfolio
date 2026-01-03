@@ -1,137 +1,133 @@
 "use client"
 
-import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import React, { useState, useMemo } from 'react'
+import { CERTIFICATES_DATA, Certificate } from '@/lib/certificates-data'
+import { SearchFilter } from '@/components/gallery/search-filter'
+import { CertificateCard } from '@/components/gallery/certificate-card'
+import { motion, AnimatePresence } from 'framer-motion'
 
-type Item = {
-  id: string
-  title: string
-  issuer: string
-  date: string
-  description: string
-  link?: string
-}
-
-const SAMPLE_ITEMS: Item[] = [
-  {
-    id: '1',
-    title: 'Machine Learning Certificate',
-    issuer: 'Coursera / Stanford',
-    date: '2023-09',
-    description: 'Completed advanced ML specialization with applied projects in CV and NLP.',
-    link: '#',
-  },
-  {
-    id: '2',
-    title: 'IEEE Emerging Tech Award',
-    issuer: 'IEEE',
-    date: '2024-06',
-    description: 'Recognized for contributions to simulation tools and reproducible research.',
-    link: '#',
-  },
-  {
-    id: '3',
-    title: 'Outstanding Research Fellowship',
-    issuer: 'University Research Council',
-    date: '2022-11',
-    description: 'Awarded for interdisciplinary research excellence and open-source tooling.',
-    link: '#',
-  },
-]
-
-const AVATAR_LIST = [
-  'IMG_9778.PNG',
-  'IMG_9781.PNG',
-  'IMG_9783.PNG',
-  'IMG_9784.PNG',
-  'IMG_9787.PNG',
-  'IMG_9788.PNG',
-  'IMG_9789.PNG',
-  'IMG_9792.PNG',
-  'IMG_9793.PNG',
-  'IMG_9795.PNG',
-  'IMG_9796.PNG',
-]
+const CATEGORIES = ['All', 'Certification', 'Internship', 'Offer Letter', 'Award']
 
 export function GalleryContent() {
-  const [items] = useState<Item[]>(SAMPLE_ITEMS)
-  const [active, setActive] = useState<Item | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+
+  const filteredItems = useMemo(() => {
+    let result = CERTIFICATES_DATA
+
+    // Filter by Category
+    if (activeCategory && activeCategory !== 'All') {
+      result = result.filter(item => item.type === activeCategory)
+    }
+
+    // Filter by Search Query
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase()
+      result = result.filter(item =>
+        item.title.toLowerCase().includes(q) ||
+        item.issuer.toLowerCase().includes(q) ||
+        item.skills.some(skill => skill.toLowerCase().includes(q))
+      )
+    }
+
+    return result
+  }, [searchQuery, activeCategory])
+
+  // Mouse move effect for cards
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    for (const card of document.getElementsByClassName("group") as any) {
+      const rect = card.getBoundingClientRect(),
+        x = e.clientX - rect.left,
+        y = e.clientY - rect.top;
+      card.style.setProperty("--mouse-x", `${x}px`);
+      card.style.setProperty("--mouse-y", `${y}px`);
+    }
+  };
 
   return (
-    <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl text-center">
-        <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">My Gallery</h1>
-        <p className="mt-4 text-lg text-gray-300">A curated collection of professional achievements — certificates, awards and recognitions. Click any card to view details.</p>
+    <div className="container mx-auto px-4 py-24 sm:px-6 lg:px-8 min-h-screen relative z-10" onMouseMove={handleMouseMove}>
+
+      {/* Header Section */}
+      <div className="flex flex-col items-center text-center space-y-6 mb-20">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-4">
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white/90 to-white/50">
+              Wall of{' '}
+            </span>
+            <span className="bg-clip-text text-transparent bg-[linear-gradient(to_right,theme(colors.purple.400),theme(colors.pink.500),theme(colors.indigo.500),theme(colors.purple.400))] bg-[length:200%_auto] animate-gradient-text shadow-xl">
+              Distinction
+            </span>
+          </h1>
+          <p className="max-w-2xl mx-auto text-lg text-zinc-400 leading-relaxed">
+            A digital archive of professional milestones, certified skills, and industry recognitions.
+          </p>
+        </motion.div>
+
+        {/* Search & Filter */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="w-full"
+        >
+          <SearchFilter
+            categories={CATEGORIES}
+            onSearch={setSearchQuery}
+            onFilterChange={setActiveCategory}
+          />
+        </motion.div>
       </div>
 
-      <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((it, idx) => (
-          <article
-            key={it.id}
-            className="group relative overflow-hidden rounded-2xl border border-white/6 bg-[linear-gradient(180deg,#ffffff06,transparent)] p-6 shadow-md transition-all duration-400 hover:scale-[1.016] hover:shadow-2xl"
+      {/* Grid Section */}
+      <div className="relative min-h-[400px]">
+        {filteredItems.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center py-20 text-zinc-500"
           >
-            {/* animated gradient accent */}
-            <div className="absolute -inset-0.5 z-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-80">
-              <div className="h-full w-full animate-gradient-move bg-[linear-gradient(90deg,rgba(0,240,255,0.06),rgba(139,92,246,0.06),rgba(255,122,182,0.04))]" />
-            </div>
+            <div className="text-4xl mb-4">🔍</div>
+            <p className="text-lg">No credentials found matching your criteria.</p>
+            <button
+              onClick={() => { setSearchQuery(""); setActiveCategory(null); }}
+              className="mt-4 text-sm text-purple-400 hover:text-purple-300 underline"
+            >
+              Clear filters
+            </button>
+          </motion.div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+            <AnimatePresence mode='popLayout'>
+              {filteredItems.map((item, idx) => (
+                <CertificateCard key={item.id} item={item} index={idx} />
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
+      </div>
 
-            <div className="relative z-10 flex items-start justify-between gap-4">
-              <div className="flex items-start gap-3">
-                <img src={`/avatars/${AVATAR_LIST[idx % AVATAR_LIST.length]}`} alt="issuer avatar" className="h-10 w-10 shrink-0 rounded-full border border-white/10 object-cover" />
-                <div>
-                  <h3 className="text-lg font-semibold text-white transition-colors duration-300 group-hover:text-[--accent]">{it.title}</h3>
-                  <p className="mt-1 text-sm text-gray-400">{it.issuer} · {it.date}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-white">✓</span>
-              </div>
-            </div>
-
-            <p className="mt-4 text-sm text-gray-300 line-clamp-3">{it.description}</p>
-
-            <div className="mt-6 flex items-center justify-between">
-              <div className="text-sm text-gray-400">Verified</div>
-              <div>
-                <Button variant="outline" size="sm" onClick={() => setActive(it)} className="group-hover:brightness-110">Details</Button>
-              </div>
-            </div>
-          </article>
-        ))}
+      {/* Decorative Bottom */}
+      <div className="mt-20 border-t border-white/5 pt-8 text-center">
+        <p className="text-xs text-zinc-600 font-mono uppercase tracking-widest">
+          Verified Digital Architecture • 2024
+        </p>
       </div>
 
       <style jsx global>{`
-        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .animate-gradient-move { background-size: 300% 300%; animation: gradientMove 6s ease-in-out infinite; }
-        :root { --accent: #00f0ff; }
+        @keyframes gradient-text {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-gradient-text {
+          animation: gradient-text 5s ease infinite;
+        }
       `}</style>
 
-      {/* Modal for details */}
-      {active && (
-        <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setActive(null)} />
-          <div className="relative z-10 max-w-2xl rounded-2xl bg-[#071018] p-6 shadow-2xl">
-            <div className="flex items-start justify-between">
-              <div>
-                <h4 className="text-xl font-semibold text-white">{active.title}</h4>
-                <p className="mt-1 text-sm text-gray-400">{active.issuer} · {active.date}</p>
-              </div>
-              <button aria-label="Close" onClick={() => setActive(null)} className="text-gray-400 hover:text-white">✕</button>
-            </div>
-
-            <div className="mt-4 text-sm text-gray-300">{active.description}</div>
-
-            <div className="mt-6 flex items-center gap-3">
-              {active.link && (
-                <a href={active.link} target="_blank" rel="noreferrer" className="inline-block">
-                  <Button variant="neon">Open Certificate</Button>
-                </a>
-              )}
-              <Button variant="glass" onClick={() => setActive(null)}>Close</Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
